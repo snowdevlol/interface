@@ -5252,6 +5252,67 @@ do --// UI Source
                 return setmetatable(Textbox, Library)
             end
 
+            Library.Paragraph = function(Self, Params)
+                Params = Params or { }
+
+                local Paragraph = {
+                    Text = Params.Text or Params.text or "Paragraph",
+
+                    Window = Self.Window,
+                    Page = Self.Page,
+                    Section = Self,
+
+                    Items = { }
+                }
+
+                local Parent = Params.Parent or Paragraph.Section.Items["Content"]
+
+                local Items = { } do
+                    Items["Paragraph"] = Library:Create("Frame", {
+                        Name = "\0",
+                        Parent = Parent.Instance,
+                        BackgroundTransparency = 1,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        BorderSizePixel = 0,
+                        AutomaticSize = Enum.AutomaticSize.Y
+                    })
+
+                    Items["Text"] = Library:Create("TextLabel", {
+                        Name = "\0",
+                        FontFace = Library.Font,
+                        TextSize = Library.FontSize,
+                        Parent = Items["Paragraph"].Instance,
+                        TextColor3 = Library.Theme["Inactive Text"],
+                        Text = Paragraph.Text,
+                        TextWrapped = true,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                        TextYAlignment = Enum.TextYAlignment.Top,
+                        Size = UDim2.new(1, -2, 0, 0),
+                        Position = UDim2.new(0, 1, 0, 0),
+                        BackgroundTransparency = 1,
+                        BorderSizePixel = 0,
+                        AutomaticSize = Enum.AutomaticSize.Y
+                    }):AddToTheme({TextColor3 = 'Inactive Text'})
+
+                    Library:Create("UIStroke", {
+                        Name = "\0",
+                        Parent = Items["Text"].Instance
+                    })
+
+                    Paragraph.Items = Items
+                end
+
+                function Paragraph:SetText(Text)
+                    Items["Text"].Instance.Text = tostring(Text)
+                end
+
+                function Paragraph:SetVisibility(Bool)
+                    Items["Paragraph"].Instance.Visible = Bool
+                end
+
+                return setmetatable(Paragraph, Library)
+            end
+
             Library.InitWindow = function(Self)
                 local SettingsPage = Self:Page({Name = "settings"}) do
                     local ConfigsSection = SettingsPage:Section({Name = "configs", Side = 2}) do
